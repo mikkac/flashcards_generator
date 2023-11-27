@@ -93,59 +93,66 @@ def create_toggle(col, input: str, output: str, example: str, id: str):
             st.write(f"**{output}**\n\n{example}")
 
 
-# Generate a flashcard
+def show_generator():
+    col1, col2 = st.columns(2)
+    with col1:
+        input_language = st.selectbox(
+            "Select an input language:", languages, index=languages.index("English")
+        )
+    with col2:
+        output_language = st.selectbox(
+            "Select an output language:", languages, index=languages.index("Polish")
+        )
 
-st.title("Flashcards generator")
-
-col1, col2 = st.columns(2)
-with col1:
-    input_language = st.selectbox(
-        "Select an input language:", languages, index=languages.index("English")
-    )
-with col2:
-    output_language = st.selectbox(
-        "Select an output language:", languages, index=languages.index("Polish")
-    )
-
-if "input_language" not in st.session_state:
+    if "input_language" not in st.session_state:
+        st.session_state.input_language = input_language
     st.session_state.input_language = input_language
-st.session_state.input_language = input_language
 
-if "output_language" not in st.session_state:
+    if "output_language" not in st.session_state:
+        st.session_state.output_language = output_language
     st.session_state.output_language = output_language
-st.session_state.output_language = output_language
 
-
-expression = st.text_input(
-    "Expression",
-    placeholder="Enter an expression and press Enter to generate a flashcard",
-)
-
-if expression and not any(
-    flashcard["input_expression"] == expression
-    for flashcard in st.session_state.flashcards
-):
-    new_flashcard = create_flashcard(
-        expression, st.session_state.input_language, st.session_state.output_language
+    expression = st.text_input(
+        "Expression",
+        placeholder="Enter an expression and press Enter to generate a flashcard",
     )
-    st.session_state.flashcards.append(new_flashcard)
 
-st.divider()
+    if expression and not any(
+        flashcard["input_expression"] == expression
+        for flashcard in st.session_state.flashcards
+    ):
+        new_flashcard = create_flashcard(
+            expression, st.session_state.input_language, st.session_state.output_language
+        )
+        st.session_state.flashcards.append(new_flashcard)
+
 
 # Display generated flashcards
 
-st.subheader("Available flashcards")
 
 
-if st.button("Expand/Collapse All"):
-    st.session_state.expand_all = not st.session_state.expand_all
+def show_flashcards():
+    col1, col2 = st.columns(2)
+    for idx, flashcard in enumerate(st.session_state.flashcards):
+        create_toggle(
+            col1 if idx % 2 == 0 else col2,
+            f"{language_to_flag[flashcard['input_language']]} {flashcard.get('input_expression', None)}",
+            f"{language_to_flag[flashcard['output_language']]} {flashcard.get('output_expression', None)}",
+            f"{flashcard.get('example_usage', None)}",
+            f"toggle_{idx}",
+        )
 
-col1, col2 = st.columns(2)
-for idx, flashcard in enumerate(st.session_state.flashcards):
-    create_toggle(
-        col1 if idx % 2 == 0 else col2,
-        f"{language_to_flag[flashcard['input_language']]} {flashcard.get('input_expression', None)}",
-        f"{language_to_flag[flashcard['output_language']]} {flashcard.get('output_expression', None)}",
-        f"{flashcard.get('example_usage', None)}",
-        f"toggle_{idx}",
-    )
+
+def main():
+    st.title("Flashcards generator")
+    show_generator()
+
+    st.divider()
+
+    st.subheader("Available flashcards")
+    if st.button("Expand/Collapse All"):
+        st.session_state.expand_all = not st.session_state.expand_all
+    show_flashcards()
+
+if __name__ == "__main__":
+    main()

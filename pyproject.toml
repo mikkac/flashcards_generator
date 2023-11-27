@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "flashcards_generator"
+version = "0.1.0"
+description = "Generate flashcards with LLM, LangChain & Streamlit"
+authors = ["Mikolaj Kaczmarek <m.kaczmarek9@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+langchain = "0.0.340"
+streamlit = "1.28.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
