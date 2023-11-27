@@ -9,6 +9,7 @@ license = "MIT"
 python = "^3.11"
 langchain = "0.0.340"
 streamlit = "1.28.2"
+python-dotenv = "1.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
