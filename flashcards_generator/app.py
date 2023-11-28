@@ -4,10 +4,13 @@ from constants import languages, language_to_flag
 from flashcard import Flashcard, Flashcards
 
 if "flashcards" not in st.session_state:
-    st.session_state.flashcards = Flashcards.import_from_json("example_data/flashcards.json")
+    st.session_state.flashcards = Flashcards.import_from_json(
+        "example_data/flashcards.json"
+    )
 
 if "expand_all" not in st.session_state:
     st.session_state.expand_all = False
+
 
 def create_flashcard(
     expression: str, input_language: str, output_language: str
@@ -17,7 +20,7 @@ def create_flashcard(
         input_language=input_language,
         output_expression=None,
         output_language=output_language,
-        example_usage=None
+        example_usage=None,
     )
 
 
@@ -63,9 +66,6 @@ def show_generator():
         st.session_state.flashcards.data.append(new_flashcard)
 
 
-# Display generated flashcards
-
-
 def show_expand_button():
     if st.button("Expand/Collapse All"):
         st.session_state.expand_all = not st.session_state.expand_all
@@ -83,13 +83,39 @@ def show_flashcards():
         )
 
 
-def main():
+def show_generator_page():
     st.title("Flashcards generator")
     show_generator()
 
     st.divider()
     show_expand_button()
     show_flashcards()
+
+
+def show_import_export_page():
+    st.title("Import/Export")
+    st.header("Import file with flashcards")
+    uploaded_file = st.file_uploader("")
+    if uploaded_file is not None:
+        st.write("File uploaded successfully!")
+
+    st.divider()
+
+    st.header("Export generated flashcards")
+    if st.button("Download File"):
+        st.write("File download button clicked!")
+
+
+def main():
+    generator_choice = "🤖 Generator"
+    import_export_choice = "📂 Import/Export"
+
+    choice = st.sidebar.radio("Select Page", (generator_choice, import_export_choice))
+    # Display the selected page based on the choice
+    if choice == generator_choice:
+        show_generator_page()
+    elif choice == import_export_choice:
+        show_import_export_page()
 
 
 if __name__ == "__main__":
