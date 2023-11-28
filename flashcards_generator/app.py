@@ -95,7 +95,7 @@ def show_generator_page():
 def show_import_export_page():
     st.title("Import/Export")
     st.header("Import file with flashcards")
-    uploaded_file = st.file_uploader("")
+    uploaded_file = st.file_uploader("Select a file")
     if uploaded_file is not None:
         st.write("File uploaded successfully!")
 
@@ -110,7 +110,9 @@ def main():
     generator_choice = "🤖 Generator"
     import_export_choice = "📂 Import/Export"
 
-    choice = st.sidebar.radio("Select Page", (generator_choice, import_export_choice))
+    with st.sidebar:
+        st.image("https://github.com/mikkac/flashcards_generator/blob/main/resources/logo.png?raw=true")
+        choice = st.radio("Select Page", (generator_choice, import_export_choice))
     # Display the selected page based on the choice
     if choice == generator_choice:
         show_generator_page()
