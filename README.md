@@ -1,9 +1,9 @@
-<table>
+<table border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td valign="middle">
-      <img src="https://github.com/mikkac/flashcards_generator/blob/main/resources/logo.png?raw=true" width=128 height=128 alt="Alt text">
+      <img src="https://github.com/mikkac/flashcards_generator/blob/main/resources/logo.png?raw=true" width=64 height=64 alt="Alt text">
     </td>
-    <td valign="middle" style="padding-left: 10px; font-size: 24px;">
+    <td valign="middle" style="padding-left: 10px; font-size: 36px;">
       <strong>Flashcards Generator</strong>
     </td>
   </tr>
