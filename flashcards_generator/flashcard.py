@@ -30,16 +30,14 @@ class Flashcards:
     def as_json(self) -> dict:
         return {"flashcards": [asdict(card) for card in self.data]}
 
-    def export_to_json(self, file_path):
-        with open(file_path, "w") as json_file:
-            json.dump(self.as_json(), json_file, indent=4)
-
     @classmethod
-    def import_from_json(cls, file_path):
-        with open(file_path, "r") as json_file:
-            data = json.load(json_file)
+    def import_from_json(cls, data):
+        data = json.load(data)
         flashcard_objects = [Flashcard(**card) for card in data["flashcards"]]
         return cls(data=flashcard_objects)
+
+    def __len__(self) -> int:
+        return len(self.data)
 
 
 class FlashcardGeneratorOpenAI:
