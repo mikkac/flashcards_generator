@@ -65,9 +65,7 @@ def show_expand_button():
 
 def show_flashcards():
     if len(st.session_state.flashcards) == 0:
-        st.info(
-            "Generate a flashcard or import a file with previously generated ones 📂
-        ")
+        st.info("Generate a flashcard or import a file with previously generated ones")
     else:
         col1, col2 = st.columns(2)
         for idx, flashcard in enumerate(st.session_state.flashcards.data):

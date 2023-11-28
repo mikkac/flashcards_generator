@@ -8,6 +8,8 @@ from show_generator_page import show_generator_page
 
 
 def main():
+    st.set_page_config(page_title="FG", layout="centered", initial_sidebar_state="auto")
+
     if "flashcards" not in st.session_state:
         st.session_state.flashcards = Flashcards([])
 

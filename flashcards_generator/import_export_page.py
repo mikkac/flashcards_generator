@@ -5,7 +5,6 @@ from flashcard import Flashcards
 
 
 def show_import_export_page():
-    st.title("Import/Export")
     st.header("Import file with flashcards")
     flashcards_file = st.file_uploader("Select a file", type="json")
     if flashcards_file is not None:
@@ -18,8 +17,9 @@ def show_import_export_page():
 
     st.divider()
 
+    st.header("Export generated flashcards")
     st.download_button(
-        "Download Generated JSON",
+        "Download flashcards",
         data=json.dumps(st.session_state.flashcards.as_json(), indent=4),
         file_name="flashcards_export.json",
         mime="application/json",
