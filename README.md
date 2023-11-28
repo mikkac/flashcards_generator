@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/mikkac/flashcards_generator/blob/main/resources/logo.png?raw=true" width="10%">
+  <img src="https://github.com/mikkac/flashcards_generator/blob/main/resources/logo.png?raw=true" width="20%">
 </div>
 
 ## Flashcards Generator
