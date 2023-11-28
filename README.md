@@ -1,4 +1,14 @@
-# Flashcards Generator
+<table>
+  <tr>
+    <td>
+      <img src="https://github.com/mikkac/flashcards_generator/blob/main/resources/logo.png?raw=true" width=128 height=128 alt="Alt text">
+    </td>
+    <td style="font-size: 3em;">
+      <strong>Flashcards Generator</strong>
+    </td>
+  </tr>
+</table>
+
 
 This is a Python project for generating flashcards using the `langchain` and `streamlit` libraries. This README provides instructions on how to set up and install the project using `Conda` & `poetry`.
 
