@@ -25,10 +25,10 @@ class Flashcard:
 
 @dataclass
 class Flashcards:
-    flashcards: list[Flashcard]
+    data: list[Flashcard]
 
     def as_json(self) -> dict:
-        return {"flashcards": [asdict(card) for card in self.flashcards]}
+        return {"flashcards": [asdict(card) for card in self.data]}
 
     def export_to_json(self, file_path):
         with open(file_path, "w") as json_file:
@@ -39,7 +39,7 @@ class Flashcards:
         with open(file_path, "r") as json_file:
             data = json.load(json_file)
         flashcard_objects = [Flashcard(**card) for card in data["flashcards"]]
-        return cls(flashcards=flashcard_objects)
+        return cls(data=flashcard_objects)
 
 
 class FlashcardGeneratorOpenAI:

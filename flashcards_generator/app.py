@@ -1,22 +1,24 @@
 import streamlit as st
 
-from constants import flashcards_data, languages, language_to_flag
+from constants import languages, language_to_flag
+from flashcard import Flashcard, Flashcards
 
 if "flashcards" not in st.session_state:
-    st.session_state.flashcards = flashcards_data
+    st.session_state.flashcards = Flashcards.import_from_json("example_data/flashcards.json")
 
 if "expand_all" not in st.session_state:
     st.session_state.expand_all = False
 
-
 def create_flashcard(
     expression: str, input_language: str, output_language: str
-) -> dict:
-    return {
-        "input_expression": expression,
-        "input_language": input_language,
-        "output_language": output_language,
-    }
+) -> Flashcard:
+    return Flashcard(
+        input_expression=expression,
+        input_language=input_language,
+        output_expression=None,
+        output_language=output_language,
+        example_usage=None
+    )
 
 
 def create_toggle(col, input: str, output: str, example: str, id: str):
@@ -50,27 +52,33 @@ def show_generator():
     )
 
     if expression and not any(
-        flashcard["input_expression"] == expression
-        for flashcard in st.session_state.flashcards
+        flashcard.input_expression == expression
+        for flashcard in st.session_state.flashcards.data
     ):
         new_flashcard = create_flashcard(
-            expression, st.session_state.input_language, st.session_state.output_language
+            expression,
+            st.session_state.input_language,
+            st.session_state.output_language,
         )
-        st.session_state.flashcards.append(new_flashcard)
+        st.session_state.flashcards.data.append(new_flashcard)
 
 
 # Display generated flashcards
 
 
+def show_expand_button():
+    if st.button("Expand/Collapse All"):
+        st.session_state.expand_all = not st.session_state.expand_all
+
 
 def show_flashcards():
     col1, col2 = st.columns(2)
-    for idx, flashcard in enumerate(st.session_state.flashcards):
+    for idx, flashcard in enumerate(st.session_state.flashcards.data):
         create_toggle(
             col1 if idx % 2 == 0 else col2,
-            f"{language_to_flag[flashcard['input_language']]} {flashcard.get('input_expression', None)}",
-            f"{language_to_flag[flashcard['output_language']]} {flashcard.get('output_expression', None)}",
-            f"{flashcard.get('example_usage', None)}",
+            f"{language_to_flag[flashcard.input_language]} {flashcard.input_expression}",
+            f"{language_to_flag[flashcard.output_language]} {flashcard.output_expression}",
+            f"{flashcard.example_usage}",
             f"toggle_{idx}",
         )
 
@@ -80,11 +88,9 @@ def main():
     show_generator()
 
     st.divider()
-
-    st.subheader("Available flashcards")
-    if st.button("Expand/Collapse All"):
-        st.session_state.expand_all = not st.session_state.expand_all
+    show_expand_button()
     show_flashcards()
+
 
 if __name__ == "__main__":
     main()
