@@ -1,7 +1,7 @@
 ## Flashcards Generator 📚
 
 
-This is a Python project for generating flashcards using the `langchain` and `streamlit` libraries. This README provides instructions on how to set up and install the project using `Conda` & `poetry`.
+This is a Python project for generating flashcards using the `langchain` and `streamlit` libraries and `OpenAI API` as a LLM backend. This README provides instructions on how to set up and install the project using `conda` & `poetry`.
 
 <p align="center">
   <img src="https://github.com/mikkac/flashcards_generator/blob/main/resources/demo.gif?raw=true" alt="animated" />
