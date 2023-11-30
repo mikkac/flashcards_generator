@@ -7,6 +7,10 @@
 
 This is a Python project for generating flashcards using the `langchain` and `streamlit` libraries. This README provides instructions on how to set up and install the project using `Conda` & `poetry`.
 
+<p align="center">
+  <img src="https://github.com/mikkac/flashcards_generator/blob/main/resources/demo.gif?raw=true" alt="animated" />
+</p>
+
 ## Prerequisites
 
 - Python 3.11 or higher
