@@ -1,11 +1,12 @@
-from dotenv import load_dotenv, find_dotenv
+""" Flashcards generator using LLM as a backend """
+
 import streamlit as st
+from dotenv import find_dotenv, load_dotenv
 
-from flashcard import Flashcards
-
+from flashcards_generator.flashcard import Flashcards
 # Importing page modules
-from import_export_page import show_import_export_page
-from show_generator_page import show_generator_page
+from flashcards_generator.import_export_page import show_import_export_page
+from flashcards_generator.show_generator_page import show_generator_page
 
 
 def main():

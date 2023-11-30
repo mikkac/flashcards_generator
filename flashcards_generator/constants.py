@@ -1,3 +1,5 @@
+""" File with constants """
+
 languages = [
     "English",
     "Spanish",

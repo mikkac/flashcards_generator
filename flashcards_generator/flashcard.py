@@ -1,9 +1,12 @@
+""" File that contains flashcards' backend """
 import json
+import os
 from dataclasses import asdict, dataclass
 
+from dotenv import find_dotenv, load_dotenv
 from langchain.chat_models import ChatOpenAI
-from langchain.prompts import ChatPromptTemplate
 from langchain.output_parsers import ResponseSchema, StructuredOutputParser
+from langchain.prompts import ChatPromptTemplate
 
 
 @dataclass
@@ -90,21 +93,23 @@ class Flashcards:
         return len(self.data)
 
 
-class FlashcardGeneratorOpenAI:
+class FlashcardGeneratorOpenAI: # pylint: disable=R0903
     """
     A class to generate language learning flashcards using OpenAI's language model.
 
     Attributes:
         chat (ChatOpenAI): An instance of ChatOpenAI for generating flashcards.
         response_schemas (list): A list of ResponseSchema objects for structuring the response.
-        output_parser (StructuredOutputParser): Parser to structure the output from the language model.
+        output_parser (StructuredOutputParser): Parser to structure the output
+                                                from the language model.
         flashcard_generator_template (str): A template for generating flashcard data.
         prompt (ChatPromptTemplate): A prompt template for the language model.
     """
 
     def __init__(self, api_key: str, llm_model: str = "gpt-3.5-turbo") -> None:
         """
-        Initializes the FlashcardGeneratorOpenAI class with the specified API key and language model.
+        Initializes the FlashcardGeneratorOpenAI class with
+        the specified API key and language model.
 
         Args:
             api_key (str): The API key for OpenAI.
@@ -112,42 +117,44 @@ class FlashcardGeneratorOpenAI:
         """
         self.chat = ChatOpenAI(temperature=0.0, model=llm_model, api_key=api_key)
 
-        self.input_expression_schema = ResponseSchema(
+        input_expression_schema = ResponseSchema(
             name="input_expression",
             type="str",
-            description="Original expression entered by the user, refined to create translated_expression.",
+            description="Original expression entered by the user, refined"
+            " to create translated_expression.",
         )
-        self.input_language_schema = ResponseSchema(
+        input_language_schema = ResponseSchema(
             name="input_language",
             type="str",
             description="Language of the input expression.",
         )
-        self.output_expression_schema = ResponseSchema(
+        output_expression_schema = ResponseSchema(
             name="output_expression",
             type="str",
             description="Translation of refined expression entered by the user.",
         )
-        self.output_language_schema = ResponseSchema(
+        output_language_schema = ResponseSchema(
             name="output_language",
             type="str",
             description="Language of the output expression.",
         )
-        self.example_usage_schema = ResponseSchema(
+        example_usage_schema = ResponseSchema(
             name="example_usage",
             type="str",
-            description="Example usage of input expression, used to give the user some example context where it could be used. Limited to one sentence.",
+            description="Example usage of input expression, used to give the user some "
+            "example context where it could be used. Limited to one sentence.",
         )
 
-        self.response_schemas = [
-            self.input_expression_schema,
-            self.input_language_schema,
-            self.output_expression_schema,
-            self.output_language_schema,
-            self.example_usage_schema,
+        response_schemas = [
+            input_expression_schema,
+            input_language_schema,
+            output_expression_schema,
+            output_language_schema,
+            example_usage_schema,
         ]
 
         self.output_parser = StructuredOutputParser.from_response_schemas(
-            self.response_schemas
+            response_schemas
         )
         self.format_instructions = self.output_parser.get_format_instructions()
 
@@ -173,12 +180,29 @@ class FlashcardGeneratorOpenAI:
         )
 
     def generate_flashcard(
-        self, input_expression: str, input_language: str, output_language: str
+        self, input_exp: str, input_lang: str, output_lang: str
     ) -> Flashcard:
+        """
+        Generates a flashcard by translating an input expression from one language to another.
+
+        This method takes an expression in a specified input language, translates it into
+        a specified output language, and then creates a flashcard containing both the original
+        and translated expressions. It uses the ChatOpenAI model to generate the translation
+        and example usage.
+
+        Args:
+            input_expression (str): The expression to be translated.
+            input_language (str): The language of the input expression.
+            output_language (str): The language into which the input expression is to be translated.
+
+        Returns:
+            Flashcard: An instance of the Flashcard class containing the original expression,
+                    its translation, and an example usage in the output language.
+        """
         messages = self.prompt.format_messages(
-            input_expression=input_expression,
-            input_language=input_language,
-            output_language=output_language,
+            input_expression=input_exp,
+            input_language=input_lang,
+            output_language=output_lang,
             format_instructions=self.format_instructions,
         )
         response = self.chat(messages)
@@ -186,10 +210,10 @@ class FlashcardGeneratorOpenAI:
         return Flashcard.from_dict(flashcard_dict)
 
 
-if __name__ == "__main__": # For debugging purposes only
-    from dotenv import load_dotenv, find_dotenv
-    import os
-
+def main():
+    """
+    For debugging purposes only
+    """
     _ = load_dotenv(find_dotenv())  # Read local .env file
 
     generator = FlashcardGeneratorOpenAI(api_key=os.environ["OPENAI_API_KEY"])
@@ -205,13 +229,14 @@ if __name__ == "__main__": # For debugging purposes only
     input_language = "English"
     output_language = "Polish"
 
-    flashcards = Flashcards()
+    flashcards = Flashcards([])
 
     for input_expression in input_expressions:
         flashcard = generator.generate_flashcard(
             input_expression, input_language, output_language
         )
         print(flashcard)
-        flashcards.flashcards.append(asdict(flashcard))
+        flashcards.data.append(flashcard)
 
-    flashcards.export_to_json("flashcards.json")
+if __name__ == "__main__":
+    main()

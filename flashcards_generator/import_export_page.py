@@ -1,7 +1,10 @@
+""" Import/export page definition """
 import json
+
 import streamlit as st
 
-from flashcard import Flashcards
+from flashcards_generator.flashcard import Flashcards
+
 
 def show_import_export_page():
     """

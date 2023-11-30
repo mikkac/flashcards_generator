@@ -1,9 +1,10 @@
-import logging
+""" Flashcards generator page definition """
 import os
+
 import streamlit as st
 
-from constants import languages, language_to_flag
-from flashcard import Flashcard, FlashcardGeneratorOpenAI
+from flashcards_generator.constants import language_to_flag, languages
+from flashcards_generator.flashcard import Flashcard, FlashcardGeneratorOpenAI
 
 
 def create_flashcard(
@@ -29,20 +30,20 @@ def create_flashcard(
     )
 
 
-def create_toggle(col, input: str, output: str, example: str):
+def create_toggle(col, original: str, translation: str, example: str):
     """
     Creates a toggle (expandable section) in the Streamlit app.
 
     Args:
         col: The Streamlit column where the toggle will be placed.
-        input (str): The input expression to be displayed.
-        output (str): The translated output expression.
+        original (str): The original expression to be displayed.
+        translation (str): The translated expression.
         example (str): An example usage of the expression.
         id (str): A unique identifier for the toggle.
     """
     with col:
-        with st.expander(input, expanded=st.session_state.expand_all):
-            st.write(f"**{output}**\n\n{example}")
+        with st.expander(original, expanded=st.session_state.expand_all):
+            st.write(f"**{translation}**\n\n{example}")
 
 
 def show_generator(generator: FlashcardGeneratorOpenAI):
@@ -82,7 +83,6 @@ def show_generator(generator: FlashcardGeneratorOpenAI):
         new_flashcard = generator.generate_flashcard(
             expression, input_language, output_language
         )
-        logging.info(f"New flashcard generated: {new_flashcard}")
         st.session_state.flashcards.data.append(new_flashcard)
 
 
