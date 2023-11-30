@@ -1,3 +1,4 @@
+from dotenv import load_dotenv, find_dotenv
 import streamlit as st
 
 from flashcard import Flashcards
@@ -8,6 +9,8 @@ from show_generator_page import show_generator_page
 
 
 def main():
+    load_dotenv(find_dotenv())  # Read local .env file
+
     st.set_page_config(page_title="FG", layout="centered", initial_sidebar_state="auto")
 
     if "flashcards" not in st.session_state:

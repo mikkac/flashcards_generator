@@ -1,7 +1,9 @@
+import logging
+import os
 import streamlit as st
 
 from constants import languages, language_to_flag
-from flashcard import Flashcard
+from flashcard import Flashcard, FlashcardGeneratorOpenAI
 
 
 def create_flashcard(
@@ -22,7 +24,7 @@ def create_toggle(col, input: str, output: str, example: str, id: str):
             st.write(f"**{output}**\n\n{example}")
 
 
-def show_generator():
+def show_generator(generator: FlashcardGeneratorOpenAI):
     col1, col2 = st.columns(2)
     with col1:
         input_language = st.selectbox(
@@ -50,11 +52,10 @@ def show_generator():
         flashcard.input_expression == expression
         for flashcard in st.session_state.flashcards.data
     ):
-        new_flashcard = create_flashcard(
-            expression,
-            st.session_state.input_language,
-            st.session_state.output_language,
+        new_flashcard = generator.generate_flashcard(
+            expression, input_language, output_language
         )
+        logging.info(f"New flashcard generated: {new_flashcard}")
         st.session_state.flashcards.data.append(new_flashcard)
 
 
@@ -79,8 +80,10 @@ def show_flashcards():
 
 
 def show_generator_page():
+    generator = FlashcardGeneratorOpenAI(api_key=os.environ["OPENAI_API_KEY"])
+
     st.title("Flashcards generator")
-    show_generator()
+    show_generator(generator)
 
     st.divider()
     show_expand_button()

@@ -19,5 +19,5 @@ language_to_flag = {
     "Hindi": "🇮🇳",  # Flag of India
     "Arabic": "🇸🇦",  # Flag of Saudi Arabia (Arabic is widely spoken in many countries)
     "Portuguese": "🇵🇹",  # Flag of Portugal
-    "Japanese": "🇯,🇵"  # Flag of Japan
+    "Japanese": "🇯,,🇵"  # Flag of Japan
 }

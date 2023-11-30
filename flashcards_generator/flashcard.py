@@ -5,6 +5,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from langchain.output_parsers import ResponseSchema, StructuredOutputParser
 
+
 @dataclass
 class Flashcard:
     input_expression: str
@@ -14,14 +15,15 @@ class Flashcard:
     example_usage: str
 
     @classmethod
-    def from_dict(cls, data):
+    def from_dict(cls, data) -> "Flashcard":
         return cls(
             input_expression=data.get("input_expression", None),
             input_language=data.get("input_language", None),
             output_expression=data.get("output_expression", None),
             output_language=data.get("output_language", None),
-            example_usage=data.get("example_usage", None)
+            example_usage=data.get("example_usage", None),
         )
+
 
 @dataclass
 class Flashcards:
@@ -50,7 +52,9 @@ class FlashcardGeneratorOpenAI:
             description="Original expression entered by the user, refined to create translated_expression.",
         )
         self.input_language_schema = ResponseSchema(
-            name="input_language", type="str", description="Language of the input expression."
+            name="input_language",
+            type="str",
+            description="Language of the input expression.",
         )
         self.output_expression_schema = ResponseSchema(
             name="output_expression",
@@ -115,8 +119,8 @@ class FlashcardGeneratorOpenAI:
         flashcard_dict = self.output_parser.parse(response.content)
         return Flashcard.from_dict(flashcard_dict)
 
+
 if __name__ == "__main__":
-    
     from dotenv import load_dotenv, find_dotenv
     import os
 
