@@ -8,6 +8,17 @@ from langchain.output_parsers import ResponseSchema, StructuredOutputParser
 
 @dataclass
 class Flashcard:
+    """
+    Represents a flashcard containing language translation information.
+
+    Attributes:
+        input_expression (str): The expression in the input language.
+        input_language (str): The language of the input expression.
+        output_expression (str): The translated expression in the output language.
+        output_language (str): The language of the output expression.
+        example_usage (str): An example usage of the input expression in a sentence.
+    """
+
     input_expression: str
     input_language: str
     output_expression: str
@@ -15,7 +26,16 @@ class Flashcard:
     example_usage: str
 
     @classmethod
-    def from_dict(cls, data) -> "Flashcard":
+    def from_dict(cls, data: dict) -> "Flashcard":
+        """
+        Creates a Flashcard instance from a dictionary of attributes.
+
+        Args:
+            data (dict): A dictionary containing flashcard attributes.
+
+        Returns:
+            Flashcard: An instance of Flashcard.
+        """
         return cls(
             input_expression=data.get("input_expression", None),
             input_language=data.get("input_language", None),
@@ -27,23 +47,69 @@ class Flashcard:
 
 @dataclass
 class Flashcards:
+    """
+    Represents a collection of Flashcard instances.
+
+    Attributes:
+        data (list[Flashcard]): A list of Flashcard instances.
+    """
+
     data: list[Flashcard]
 
     def as_json(self) -> dict:
+        """
+        Converts the collection of Flashcard instances to a JSON format.
+
+        Returns:
+            dict: A dictionary representing the flashcards in JSON format.
+        """
         return {"flashcards": [asdict(card) for card in self.data]}
 
     @classmethod
-    def import_from_json(cls, data):
+    def import_from_json(cls, data: dict) -> "Flashcards":
+        """
+        Creates a Flashcards instance from a JSON file.
+
+        Args:
+            data (file): A JSON file containing flashcard data.
+
+        Returns:
+            Flashcards: An instance of Flashcards containing the imported data.
+        """
         data = json.load(data)
         flashcard_objects = [Flashcard(**card) for card in data["flashcards"]]
         return cls(data=flashcard_objects)
 
     def __len__(self) -> int:
+        """
+        Returns the number of Flashcard instances in the collection.
+
+        Returns:
+            int: The number of Flashcard instances.
+        """
         return len(self.data)
 
 
 class FlashcardGeneratorOpenAI:
+    """
+    A class to generate language learning flashcards using OpenAI's language model.
+
+    Attributes:
+        chat (ChatOpenAI): An instance of ChatOpenAI for generating flashcards.
+        response_schemas (list): A list of ResponseSchema objects for structuring the response.
+        output_parser (StructuredOutputParser): Parser to structure the output from the language model.
+        flashcard_generator_template (str): A template for generating flashcard data.
+        prompt (ChatPromptTemplate): A prompt template for the language model.
+    """
+
     def __init__(self, api_key: str, llm_model: str = "gpt-3.5-turbo") -> None:
+        """
+        Initializes the FlashcardGeneratorOpenAI class with the specified API key and language model.
+
+        Args:
+            api_key (str): The API key for OpenAI.
+            llm_model (str): The name of the language model to use.
+        """
         self.chat = ChatOpenAI(temperature=0.0, model=llm_model, api_key=api_key)
 
         self.input_expression_schema = ResponseSchema(
@@ -120,7 +186,7 @@ class FlashcardGeneratorOpenAI:
         return Flashcard.from_dict(flashcard_dict)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # For debugging purposes only
     from dotenv import load_dotenv, find_dotenv
     import os
 
